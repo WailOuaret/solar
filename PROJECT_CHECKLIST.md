@@ -8,8 +8,10 @@ Workspace: `c:\Users\wailo\Desktop\solar`
 - The repository scaffold is complete.
 - The three raw datasets are frozen under `data/raw/`.
 - Metadata, leakage-safe splits, and audit artifacts have been generated on the real data.
-- Reduced-run baselines have been trained for DeepSolarEye, Villegas, and TRSAI.
-- Final full-dataset experiments, demo packaging, and aligned fusion evaluation are still pending.
+- Full-data GPU experiments have been completed for DeepSolarEye, Villegas, and TRSAI.
+- The Villegas parser was corrected for mixed electrical target units and the electrical experiments were rerun on the fixed metadata.
+- Demo-ready prediction bundles and a manual fusion showcase have been generated.
+- A fully aligned cross-dataset fusion benchmark is still pending because the datasets do not share common sample IDs.
 
 ## Done Already (Planning / Scope)
 
@@ -146,27 +148,27 @@ Workspace: `c:\Users\wailo\Desktop\solar`
 - [x] Measure latency / inference time
 - [x] Document limitations
 - [x] Write final report
-- [ ] Prepare demo-ready outputs
+- [x] Prepare demo-ready outputs
 - [x] Add tests
 
 ## Honest Progress Summary
 
 - Planning: done
-- Code implementation: scaffold and branch scripts completed
+- Code implementation: scaffold, branch scripts, and demo/report utilities completed
 - Data acquisition: done
 - Metadata and splits: done on real data
 - Audit: done on real data
-- Training: reduced-run baselines completed
-- Evaluation: reduced-run metrics generated for all three branches
-- Final system: branch checkpoints exist; aligned fusion benchmarking still pending
+- Training: full-data GPU runs completed for all three branches
+- Evaluation: final branch metrics, post-fix Villegas reruns, latency, fusion outputs, and smoke-test inference runs completed
+- Final system: branch checkpoints exist, manual fusion showcase is generated, aligned fusion benchmarking still pending
 
 ## Recommended Next 5 Actions
 
-1. Decide whether to rerun the strongest experiments on the full datasets instead of the reduced sample caps.
-2. Produce demo-ready prediction examples and a small fusion showcase.
-3. Refresh `outputs/reports/final_report.md` after any new runs.
-4. If TRSAI labels can be enriched with negatives, rerun the thermal branch as a real binary hotspot task.
-5. Add an aligned fusion evaluation set or a small manual demo bundle that shares common inspection cases across branches.
+1. If TRSAI labels can be enriched with negatives, rerun the thermal branch as a real binary hotspot task.
+2. Build an aligned fusion evaluation set with shared inspection cases across modalities.
+3. Improve Villegas target quality and scaling before claiming strong electrical-impact performance.
+4. Add localization or weak-visualization outputs to improve interpretability in the final demo.
+5. Re-export the final report after any new checkpoint or label changes.
 
 ## Update Rule
 

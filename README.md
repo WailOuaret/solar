@@ -61,10 +61,24 @@ solar/
 ### 1. Create environment
 
 ```bash
-python -m venv .venv
-.venv\Scripts\activate
-pip install -r requirements.txt
+py -3.12 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
 ```
+
+Install PyTorch separately before the rest of the requirements. This project targets Windows with Python `3.12` because stable PyTorch on Windows supports Python `3.9` to `3.12`.
+
+Example for NVIDIA GPU with CUDA `12.4` wheels:
+
+```bash
+python -m pip install torch==2.5.1 torchvision==0.20.1 torchaudio==2.5.1 --index-url https://download.pytorch.org/whl/cu124
+python -m pip install -r requirements.txt
+```
+
+If you want a different CUDA wheel, use the official PyTorch selector and previous-version commands:
+
+- https://docs.pytorch.org/get-started/locally/
+- https://docs.pytorch.org/get-started/previous-versions/
 
 ### 2. Prepare datasets
 
@@ -141,4 +155,3 @@ python scripts/run_fusion.py --config configs/fusion.yaml
 - Raw datasets should remain immutable under `data/raw/`.
 - Splits should avoid temporal or session leakage.
 - This codebase is written to support the proposal structure even before all datasets are present locally.
-

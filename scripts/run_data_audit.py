@@ -184,6 +184,10 @@ def main() -> None:
     plt.tight_layout()
     plt.savefig(figures_dir / "split_counts_by_dataset.png")
     plt.close()
+    split_summary = {
+        str(dataset_name): {str(split_name): int(count) for split_name, count in row.items()}
+        for dataset_name, row in split_counts.astype(int).iterrows()
+    }
 
     deepsolareye = frame[frame["dataset_name"] == "deepsolareye"].copy()
     if not deepsolareye.empty:
@@ -219,9 +223,11 @@ def main() -> None:
         size_summary = size_frame.groupby("dataset_name")[["width", "height"]].median().round(0)
         size_summary.to_csv(tables_dir / "image_size_summary.csv")
 
-    hash_frame = frame.groupby("dataset_name", group_keys=False).apply(
-        lambda group: limit_group(group, args.max_hash_files_per_dataset)
-    ).reset_index(drop=True)
+    hash_groups = [
+        limit_group(group, args.max_hash_files_per_dataset).copy()
+        for _, group in frame.groupby("dataset_name", dropna=False)
+    ]
+    hash_frame = pd.concat(hash_groups, ignore_index=True) if hash_groups else frame.iloc[0:0].copy()
 
     if args.skip_exact_duplicates:
         duplicate_frame = pd.DataFrame(
@@ -241,7 +247,7 @@ def main() -> None:
     audit_summary = {
         "row_count": int(len(frame)),
         "dataset_counts": dataset_counts.to_dict(),
-        "split_counts": {dataset: values for dataset, values in split_counts.astype(int).to_dict(orient="index").items()},
+        "split_counts": split_summary,
         "image_exists_by_dataset": frame.groupby("dataset_name")["image_exists"].mean().round(4).to_dict(),
         "deepsolareye": {
             "power_loss_missing": int(deepsolareye["power_loss_pct"].isna().sum()) if not deepsolareye.empty else 0,

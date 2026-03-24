@@ -81,6 +81,26 @@ def _first_by_substring(row: pd.Series, substring: str) -> float | None:
     return None
 
 
+def _harmonize_villegas_pmpp(value: float | None) -> float | None:
+    if value is None:
+        return None
+    return value / 1000.0 if value > 100.0 else value
+
+
+def _harmonize_villegas_isc(value: float | None) -> float | None:
+    if value is None:
+        return None
+    return value / 1000.0 if value > 10.0 else value
+
+
+def _harmonize_villegas_ff(value: float | None) -> float | None:
+    if value is None:
+        return None
+    if value > 2.0:
+        return None
+    return value
+
+
 def parse_deepsolareye(raw_dir: Path) -> pd.DataFrame:
     images = list_images(raw_dir)
     samples: list[UnifiedSample] = []
@@ -163,6 +183,10 @@ def parse_villegas(raw_dir: Path) -> pd.DataFrame:
         except Exception:
             session_id = record[:10]
 
+        pmpp = _harmonize_villegas_pmpp(_first_by_substring(row, "pmpp"))
+        isc = _harmonize_villegas_isc(_first_by_substring(row, "isc"))
+        ff = _harmonize_villegas_ff(_first_by_substring(row, "fill factor"))
+
         samples.append(
             UnifiedSample(
                 sample_id=record,
@@ -179,9 +203,9 @@ def parse_villegas(raw_dir: Path) -> pd.DataFrame:
                 azimuth=_first_by_substring(row, "azimuth"),
                 zenith=_first_by_substring(row, "zenith"),
                 albedo=_first_by_substring(row, "albedo"),
-                pmpp=_first_by_substring(row, "pmpp"),
-                isc=_first_by_substring(row, "isc"),
-                ff=_first_by_substring(row, "fill factor"),
+                pmpp=pmpp,
+                isc=isc,
+                ff=ff,
                 source_metadata_file=str(electrical_zip or features_path),
             )
         )

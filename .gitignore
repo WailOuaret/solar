@@ -1,4 +1,5 @@
 .venv/
+.venv*/
 __pycache__/
 .pytest_cache/
 .mypy_cache/
@@ -26,8 +27,10 @@ outputs/models/
 outputs/predictions/
 outputs/figures/
 outputs/tables/
+outputs/chatgpt_analysis_bundle/
+outputs/chatgpt_analysis_bundle.zip
+data.zip
 
 dist/
 build/
 *.egg-info/
-

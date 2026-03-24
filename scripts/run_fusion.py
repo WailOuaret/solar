@@ -8,7 +8,7 @@ from _bootstrap import bootstrap_project_root
 
 bootstrap_project_root()
 
-from src.inference.decision_rules import recommend_action
+from src.inference.decision_rules import electrical_targets_to_risk_score, recommend_action
 from src.utils.io import ensure_dir, load_yaml
 from src.utils.paths import resolve_project_path
 
@@ -26,6 +26,7 @@ def main() -> None:
     args = parser.parse_args()
 
     cfg = load_yaml(resolve_project_path(args.config))
+    electrical_reference = cfg.get("electrical_reference", {})
 
     powerloss = _safe_read_csv(resolve_project_path(cfg["powerloss_predictions"]))
     electrical = _safe_read_csv(resolve_project_path(cfg["electrical_predictions"]))
@@ -45,9 +46,12 @@ def main() -> None:
     rows = []
     for _, row in base.iterrows():
         power_loss_pct = row.get("pred_power_loss_pct")
-        electrical_values = [row.get("pred_pmpp"), row.get("pred_isc"), row.get("pred_ff")]
-        available = [abs(value) for value in electrical_values if pd.notna(value)]
-        electrical_score = min(sum(available) / max(1, len(available) * max(available + [1.0])), 1.0) if available else None
+        electrical_score = electrical_targets_to_risk_score(
+            pmpp=row.get("pred_pmpp"),
+            isc=row.get("pred_isc"),
+            ff=row.get("pred_ff"),
+            references=electrical_reference,
+        )
         hotspot_probability = row.get("hotspot_probability") if pd.notna(row.get("hotspot_probability")) else None
         decision = recommend_action(
             power_loss_pct=float(power_loss_pct) if pd.notna(power_loss_pct) else None,

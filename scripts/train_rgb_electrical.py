@@ -39,6 +39,20 @@ def load_matching_checkpoint(model: torch.nn.Module, checkpoint_path: str, encod
     return len(matched)
 
 
+def filter_valid_villegas_rows(frame: pd.DataFrame) -> pd.DataFrame:
+    valid = frame.copy()
+    valid = valid[valid["pmpp"].notna() & valid["isc"].notna() & valid["ff"].notna()].copy()
+    valid = valid[(valid["pmpp"] >= 0.0) & (valid["isc"] >= 0.0)].copy()
+    # Fill factor is physically bounded near [0, 1]. Keep a small margin for noise and drop obvious metadata corruption.
+    valid = valid[(valid["ff"] >= 0.0) & (valid["ff"] <= 1.5)].copy()
+    return valid
+
+
+def compute_target_scales(frame: pd.DataFrame, target_names: list[str]) -> list[float]:
+    quantiles = frame[target_names].abs().quantile(0.95)
+    return [max(float(value), 1e-3) for value in quantiles.tolist()]
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Train Villegas RGB electrical regression baseline.")
     parser.add_argument("--config", default="configs/train_regression.yaml")
@@ -49,11 +63,15 @@ def main() -> None:
 
     frame = load_metadata_frame(cfg["metadata_csv"])
     frame = frame[frame["dataset_name"] == cfg["dataset_name"]].copy()
-    frame = frame[frame["pmpp"].notna() & frame["isc"].notna() & frame["ff"].notna()].copy()
+    before_count = len(frame)
+    frame = filter_valid_villegas_rows(frame)
+    print(f"Filtered Villegas rows: kept {len(frame)} / {before_count} after target validity checks")
     train_frame = frame[frame["split"] == "train"].copy()
     val_frame = frame[frame["split"] == "val"].copy()
     train_frame = limit_frame(train_frame, cfg.get("max_train_samples"), seed=cfg.get("random_seed", 42))
     val_frame = limit_frame(val_frame, cfg.get("max_val_samples"), seed=cfg.get("random_seed", 42))
+    target_scales = compute_target_scales(train_frame, cfg["targets"])
+    print(f"Target scales for robust loss: {dict(zip(cfg['targets'], target_scales))}")
 
     weather_features = cfg.get("weather_features", []) if cfg.get("use_weather_features", False) else []
     train_ds = VillegasDataset(train_frame, transform=build_rgb_transform(cfg["image_size"], is_train=True), weather_features=weather_features)
@@ -77,7 +95,7 @@ def main() -> None:
         print(f"Loaded {matched} matching parameters from {resolve_project_path(cfg['pretrained_checkpoint'])}")
 
     optimizer = torch.optim.AdamW(model.parameters(), lr=cfg["learning_rate"], weight_decay=cfg["weight_decay"])
-    trainer = Trainer(device="cuda" if torch.cuda.is_available() else "cpu")
+    trainer = Trainer(device="cuda" if torch.cuda.is_available() else "cpu", mixed_precision=False)
     output_dir = resolve_project_path(cfg["output_dir"])
     checkpoint_path = output_dir / cfg["save_name"]
     print(f"Train samples: {len(train_frame)} | Val samples: {len(val_frame)}")
@@ -86,7 +104,7 @@ def main() -> None:
         train_loader=train_loader,
         val_loader=val_loader,
         optimizer=optimizer,
-        loss_fn=electrical_loss,
+        loss_fn=lambda outputs, batch: electrical_loss(outputs, batch, target_scales=target_scales),
         epochs=cfg["epochs"],
         checkpoint_path=str(checkpoint_path),
     )

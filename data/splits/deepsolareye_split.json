@@ -1,9 +1,9 @@
 {
   "dataset_name": "deepsolareye",
   "counts": {
-    "train": 16462,
-    "val": 3637,
-    "test": 1391
+    "train": 13602,
+    "val": 2516,
+    "test": 5372
   },
   "leakage_check": {
     "group_column": "session_id",

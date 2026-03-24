@@ -1,11 +1,14 @@
-powerloss_predictions: outputs/predictions/deepsolareye_predictions.csv
-electrical_predictions: outputs/predictions/villegas_predictions.csv
-thermal_predictions: outputs/predictions/trsai_predictions.csv
+powerloss_predictions: outputs/predictions/deepsolareye_rgb_powerloss_multitask_predictions.csv
+electrical_predictions: outputs/predictions/villegas_rgb_electrical_transfer_predictions.csv
+thermal_predictions: outputs/predictions/trsai_thermal_hotspot_predictions.csv
 output_predictions: outputs/predictions/fusion_predictions.csv
 output_report: outputs/reports/fusion_report.md
+electrical_reference:
+  pmpp: 60.4712
+  isc: 5.1519
+  ff: 0.792574
 severity_thresholds:
   low: 0.2
   medium: 0.45
   high: 0.7
   urgent: 0.85
-

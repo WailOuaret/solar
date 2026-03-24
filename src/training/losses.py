@@ -20,8 +20,20 @@ def powerloss_loss(
     }
 
 
-def electrical_loss(outputs: dict[str, torch.Tensor], batch: dict[str, torch.Tensor]) -> tuple[torch.Tensor, dict[str, float]]:
-    loss = F.mse_loss(outputs["electrical"], batch["targets"])
+def electrical_loss(
+    outputs: dict[str, torch.Tensor],
+    batch: dict[str, torch.Tensor],
+    target_scales: torch.Tensor | list[float] | tuple[float, ...] | None = None,
+) -> tuple[torch.Tensor, dict[str, float]]:
+    predictions = outputs["electrical"]
+    targets = batch["targets"]
+
+    if target_scales is not None:
+        scales = torch.as_tensor(target_scales, dtype=predictions.dtype, device=predictions.device).view(1, -1).clamp_min(1e-6)
+        predictions = predictions / scales
+        targets = targets / scales
+
+    loss = F.smooth_l1_loss(predictions, targets)
     return loss, {"loss": float(loss.detach().cpu())}
 
 
@@ -39,4 +51,3 @@ def fusion_loss(outputs: dict[str, torch.Tensor], targets: dict[str, torch.Tenso
         "risk_loss": float(risk_loss.detach().cpu()),
         "severity_loss": float(severity_loss.detach().cpu()),
     }
-

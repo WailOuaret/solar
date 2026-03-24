@@ -74,7 +74,10 @@ def main() -> None:
         model.load_state_dict(checkpoint["model_state_dict"], strict=False)
         model.eval()
         with torch.no_grad():
-            results["deepsolareye_rgb_powerloss"] = _time_forward(lambda: model(image, tabular), repeats=args.repeats)
+            results[rgb_cfg.get("experiment_name", "deepsolareye_rgb_powerloss")] = _time_forward(
+                lambda: model(image, tabular),
+                repeats=args.repeats,
+            )
 
     regression_cfg = load_config(args.regression_config)
     regression_frame = metadata[
@@ -104,7 +107,10 @@ def main() -> None:
         model.load_state_dict(checkpoint["model_state_dict"], strict=False)
         model.eval()
         with torch.no_grad():
-            results["villegas_rgb_electrical_transfer"] = _time_forward(lambda: model(image, weather), repeats=args.repeats)
+            results[regression_cfg.get("experiment_name", "villegas_rgb_electrical")] = _time_forward(
+                lambda: model(image, weather),
+                repeats=args.repeats,
+            )
 
     thermal_cfg = load_config(args.thermal_config)
     thermal_frame = metadata[(metadata["dataset_name"] == thermal_cfg["dataset_name"]) & (metadata["split"] == args.split)].head(1)
@@ -120,7 +126,10 @@ def main() -> None:
         model.load_state_dict(checkpoint["model_state_dict"], strict=False)
         model.eval()
         with torch.no_grad():
-            results["trsai_thermal_hotspot"] = _time_forward(lambda: model(image), repeats=args.repeats)
+            results[thermal_cfg.get("experiment_name", "trsai_thermal_hotspot")] = _time_forward(
+                lambda: model(image),
+                repeats=args.repeats,
+            )
 
     dump_json(results, resolve_project_path("outputs/tables/latency_summary.json"))
     print(results)

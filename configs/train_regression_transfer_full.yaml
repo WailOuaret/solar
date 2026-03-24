@@ -1,0 +1,31 @@
+experiment_name: villegas_rgb_electrical_transfer
+metadata_csv: data/processed/unified_metadata/metadata_master.csv
+dataset_name: villegas
+backbone: resnet18
+pretrained: true
+pretrained_checkpoint: outputs/models/deepsolareye/best_powerloss.pt
+load_encoder_only: true
+image_size: 224
+batch_size: 32
+epochs: 6
+num_workers: 0
+learning_rate: 0.0001
+weight_decay: 0.0001
+optimizer: adamw
+targets:
+  - pmpp
+  - isc
+  - ff
+use_weather_features: true
+weather_features:
+  - irradiance
+  - temperature
+  - azimuth
+  - zenith
+  - albedo
+max_train_samples:
+max_val_samples:
+max_test_samples:
+random_seed: 42
+output_dir: outputs/models/villegas_transfer
+save_name: best_electrical_transfer.pt

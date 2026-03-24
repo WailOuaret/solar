@@ -1,17 +1,17 @@
 device: auto
 checkpoints:
-  powerloss: outputs/models/deepsolareye/best_powerloss.pt
-  electrical: outputs/models/villegas/best_electrical.pt
+  powerloss: outputs/models/deepsolareye_multitask/best_powerloss_multitask.pt
+  electrical: outputs/models/villegas_transfer/best_electrical_transfer.pt
   thermal: outputs/models/trsai/best_hotspot.pt
 
 models:
   powerloss:
-    backbone: efficientnet_b0
+    backbone: resnet18
     pretrained: false
-    num_tabular_features: 4
+    num_tabular_features: 3
     num_severity_classes: 4
   electrical:
-    backbone: efficientnet_b0
+    backbone: resnet18
     pretrained: false
     num_weather_features: 5
     target_names:

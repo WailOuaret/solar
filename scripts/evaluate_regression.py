@@ -19,6 +19,14 @@ from src.utils.io import dump_json, ensure_dir
 from src.utils.paths import resolve_project_path
 
 
+def filter_valid_villegas_rows(frame: pd.DataFrame) -> pd.DataFrame:
+    valid = frame.copy()
+    valid = valid[valid["pmpp"].notna() & valid["isc"].notna() & valid["ff"].notna()].copy()
+    valid = valid[(valid["pmpp"] >= 0.0) & (valid["isc"] >= 0.0)].copy()
+    valid = valid[(valid["ff"] >= 0.0) & (valid["ff"] <= 1.5)].copy()
+    return valid
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Evaluate Villegas electrical regression branch.")
     parser.add_argument("--config", default="configs/train_regression.yaml")
@@ -29,7 +37,7 @@ def main() -> None:
     experiment_name = cfg.get("experiment_name", "villegas_rgb_electrical")
     frame = load_metadata_frame(cfg["metadata_csv"])
     frame = frame[(frame["dataset_name"] == cfg["dataset_name"]) & (frame["split"] == args.split)].copy()
-    frame = frame[frame["pmpp"].notna() & frame["isc"].notna() & frame["ff"].notna()].copy()
+    frame = filter_valid_villegas_rows(frame)
     frame = limit_frame(frame, cfg.get("max_test_samples"), seed=cfg.get("random_seed", 42))
 
     weather_features = cfg.get("weather_features", []) if cfg.get("use_weather_features", False) else []
