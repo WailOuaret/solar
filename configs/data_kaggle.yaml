@@ -1,0 +1,81 @@
+# Replace the /kaggle/input/solar-raw-data prefix if you use a different Kaggle dataset name.
+project_root: /kaggle/working/solar
+
+paths:
+  raw_root: /kaggle/input/solar-raw-data
+  interim_root: data/interim
+  processed_root: data/processed
+  metadata_root: data/processed/unified_metadata
+  split_root: data/splits
+  outputs_root: outputs
+
+datasets:
+  deepsolareye:
+    name: deepsolareye
+    raw_dir: /kaggle/input/solar-raw-data/deepsolareye
+    processed_dir: data/processed/rgb_powerloss
+    metadata_csv: data/processed/unified_metadata/deepsolareye_metadata.csv
+    split_json: data/splits/deepsolareye_split.json
+    modality: rgb
+    image_size: 224
+    labels:
+      regression: power_loss_pct
+      classification: severity_label
+    grouping_keys:
+      - session_id
+      - source_panel_id
+      - timestamp_date
+    metadata_features:
+      - irradiance
+      - temperature
+      - hour_sin
+      - hour_cos
+
+  villegas:
+    name: villegas
+    raw_dir: /kaggle/input/solar-raw-data/villegas
+    processed_dir: data/processed/rgb_electrical
+    metadata_csv: data/processed/unified_metadata/villegas_metadata.csv
+    split_json: data/splits/villegas_split.json
+    modality: rgb
+    image_size: 224
+    labels:
+      regression:
+        - pmpp
+        - isc
+        - ff
+    grouping_keys:
+      - session_id
+      - source_panel_id
+      - timestamp_date
+    weather_features:
+      - irradiance
+      - temperature
+      - azimuth
+      - zenith
+      - albedo
+
+  trsai:
+    name: trsai
+    raw_dir: /kaggle/input/solar-raw-data/trsai
+    processed_dir: data/processed/thermal_hotspot
+    metadata_csv: data/processed/unified_metadata/trsai_metadata.csv
+    split_json: data/splits/trsai_split.json
+    modality: thermal
+    image_size: 256
+    labels:
+      classification: hotspot_label
+    grouping_keys:
+      - session_id
+      - source_panel_id
+      - dataset_version
+
+unified_metadata:
+  csv: data/processed/unified_metadata/metadata_master.csv
+  parquet: data/processed/unified_metadata/metadata_master.parquet
+
+splits:
+  train_ratio: 0.7
+  val_ratio: 0.15
+  test_ratio: 0.15
+  random_seed: 42

@@ -1,0 +1,14 @@
+dataset_name: villegas
+task: rgb_electrical
+modality: rgb
+targets:
+  - pmpp
+  - isc
+  - ff
+weather_features:
+  - irradiance
+  - temperature
+  - azimuth
+  - zenith
+  - albedo
+

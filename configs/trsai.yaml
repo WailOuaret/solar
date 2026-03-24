@@ -1,0 +1,8 @@
+dataset_name: trsai
+task: thermal_hotspot
+modality: thermal
+primary_target: hotspot_label
+dataset_versions:
+  - v1
+  - v2
+

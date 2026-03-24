@@ -1,0 +1,26 @@
+experiment_name: deepsolareye_rgb_powerloss_kaggle_smoke
+metadata_csv: data/processed/unified_metadata/metadata_master.csv
+dataset_name: deepsolareye
+split: train
+backbone: efficientnet_b0
+pretrained: false
+image_size: 224
+batch_size: 8
+epochs: 1
+num_workers: 0
+learning_rate: 0.0003
+weight_decay: 0.0001
+optimizer: adamw
+regression_weight: 1.0
+classification_weight: 0.3
+use_tabular_features: true
+tabular_features:
+  - irradiance
+  - temperature
+  - hour_sin
+  - hour_cos
+random_seed: 42
+max_train_samples: 256
+max_val_samples: 64
+output_dir: outputs/models/deepsolareye_smoke
+save_name: smoke_powerloss.pt

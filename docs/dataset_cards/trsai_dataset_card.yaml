@@ -1,0 +1,9 @@
+{
+  "dataset": "Thermal Hotspot Detection Dataset",
+  "dataset_key": "trsai",
+  "source_url": "https://data.mendeley.com/datasets/8sxfmrpfpv/1",
+  "license": "CC BY 4.0",
+  "raw_dir": "C:\\Users\\wailo\\Desktop\\solar\\data\\raw\\trsai",
+  "notes": "Mendeley datasets can require manual download from the dataset page.",
+  "status": "awaiting_download"
+}

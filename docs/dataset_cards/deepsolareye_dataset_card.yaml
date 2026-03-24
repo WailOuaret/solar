@@ -1,0 +1,9 @@
+{
+  "dataset": "DeepSolarEye",
+  "dataset_key": "deepsolareye",
+  "source_url": "https://deep-solar-eye.github.io/",
+  "license": "Creative Commons release referenced by dataset page",
+  "raw_dir": "C:\\Users\\wailo\\Desktop\\solar\\data\\raw\\deepsolareye",
+  "notes": "Download may require following the project links from the official page.",
+  "status": "awaiting_download"
+}

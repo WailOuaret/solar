@@ -1,0 +1,9 @@
+{
+  "dataset": "PV Panel Partial Shading & Electrical Dataset",
+  "dataset_key": "villegas",
+  "source_url": "https://www.mdpi.com/2306-5729/7/6/82",
+  "license": "CC BY 4.0",
+  "raw_dir": "C:\\Users\\wailo\\Desktop\\solar\\data\\raw\\villegas",
+  "notes": "The paper references the dataset DOI. Raw files may require manual retrieval.",
+  "status": "awaiting_download"
+}

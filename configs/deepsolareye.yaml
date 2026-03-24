@@ -1,0 +1,11 @@
+dataset_name: deepsolareye
+task: rgb_powerloss
+modality: rgb
+primary_target: power_loss_pct
+secondary_target: severity_label
+aux_features:
+  - irradiance
+  - temperature
+  - hour_sin
+  - hour_cos
+

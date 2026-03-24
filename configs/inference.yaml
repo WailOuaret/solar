@@ -1,0 +1,32 @@
+device: auto
+checkpoints:
+  powerloss: outputs/models/deepsolareye/best_powerloss.pt
+  electrical: outputs/models/villegas/best_electrical.pt
+  thermal: outputs/models/trsai/best_hotspot.pt
+
+models:
+  powerloss:
+    backbone: efficientnet_b0
+    pretrained: false
+    num_tabular_features: 4
+    num_severity_classes: 4
+  electrical:
+    backbone: efficientnet_b0
+    pretrained: false
+    num_weather_features: 5
+    target_names:
+      - pmpp
+      - isc
+      - ff
+  thermal:
+    backbone: resnet18
+    pretrained: false
+
+severity_thresholds:
+  power_loss:
+    low: 5.0
+    medium: 12.0
+    high: 20.0
+  hotspot_probability:
+    medium: 0.5
+    urgent: 0.8

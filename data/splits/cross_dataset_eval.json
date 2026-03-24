@@ -1,0 +1,9 @@
+{
+  "datasets": [
+    "deepsolareye",
+    "villegas",
+    "trsai"
+  ],
+  "metadata_csv": "data/processed/unified_metadata/metadata_master.csv",
+  "notes": "Splits are grouped to reduce temporal or session leakage."
+}

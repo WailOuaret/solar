@@ -1,0 +1,26 @@
+experiment_name: deepsolareye_rgb_powerloss
+metadata_csv: data/processed/unified_metadata/metadata_master.csv
+dataset_name: deepsolareye
+split: train
+backbone: resnet18
+pretrained: true
+image_size: 224
+batch_size: 8
+epochs: 2
+num_workers: 0
+learning_rate: 0.0003
+weight_decay: 0.0001
+optimizer: adamw
+regression_weight: 1.0
+classification_weight: 0.0
+use_tabular_features: true
+tabular_features:
+  - irradiance
+  - hour_sin
+  - hour_cos
+max_train_samples: 2048
+max_val_samples: 512
+max_test_samples: 512
+random_seed: 42
+output_dir: outputs/models/deepsolareye
+save_name: best_powerloss.pt

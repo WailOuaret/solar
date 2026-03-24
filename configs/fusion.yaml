@@ -1,0 +1,11 @@
+powerloss_predictions: outputs/predictions/deepsolareye_predictions.csv
+electrical_predictions: outputs/predictions/villegas_predictions.csv
+thermal_predictions: outputs/predictions/trsai_predictions.csv
+output_predictions: outputs/predictions/fusion_predictions.csv
+output_report: outputs/reports/fusion_report.md
+severity_thresholds:
+  low: 0.2
+  medium: 0.45
+  high: 0.7
+  urgent: 0.85
+

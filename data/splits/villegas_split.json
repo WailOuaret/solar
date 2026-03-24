@@ -1,0 +1,14 @@
+{
+  "dataset_name": "villegas",
+  "counts": {
+    "train": 3681,
+    "val": 899,
+    "test": 631
+  },
+  "leakage_check": {
+    "group_column": "session_id",
+    "train_val_overlap": [],
+    "train_test_overlap": [],
+    "val_test_overlap": []
+  }
+}
