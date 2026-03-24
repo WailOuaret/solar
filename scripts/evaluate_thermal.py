@@ -11,7 +11,7 @@ from _bootstrap import bootstrap_project_root
 bootstrap_project_root()
 
 from src.data.datasets import TRSAIThermalDataset
-from src.data.loaders import load_config, load_metadata_frame
+from src.data.loaders import limit_frame, load_config, load_metadata_frame
 from src.data.transforms_thermal import build_thermal_transform
 from src.models.thermal_hotspot_head import ThermalHotspotModel
 from src.training.metrics import classification_metrics
@@ -26,8 +26,10 @@ def main() -> None:
     args = parser.parse_args()
 
     cfg = load_config(args.config)
+    experiment_name = cfg.get("experiment_name", "trsai_thermal_hotspot")
     frame = load_metadata_frame(cfg["metadata_csv"])
     frame = frame[(frame["dataset_name"] == cfg["dataset_name"]) & (frame["split"] == args.split)].copy()
+    frame = limit_frame(frame, cfg.get("max_test_samples"), seed=cfg.get("random_seed", 42))
 
     dataset = TRSAIThermalDataset(frame, transform=build_thermal_transform(cfg["image_size"], is_train=False))
     loader = DataLoader(dataset, batch_size=cfg["batch_size"], shuffle=False, num_workers=cfg["num_workers"])
@@ -67,8 +69,8 @@ def main() -> None:
     tables_dir = resolve_project_path("outputs/tables")
     ensure_dir(predictions_dir)
     ensure_dir(tables_dir)
-    pred_frame.to_csv(predictions_dir / "trsai_predictions.csv", index=False)
-    dump_json(metrics, tables_dir / "trsai_metrics.json")
+    pred_frame.to_csv(predictions_dir / f"{experiment_name}_predictions.csv", index=False)
+    dump_json(metrics, tables_dir / f"{experiment_name}_metrics.json")
     print(metrics)
 
 

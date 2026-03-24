@@ -32,6 +32,9 @@ def main() -> None:
 
     frame = load_metadata_frame(cfg["metadata_csv"])
     frame = frame[frame["dataset_name"] == cfg["dataset_name"]].copy()
+    class_count = frame["hotspot_label"].dropna().nunique()
+    if class_count < 2:
+        print("Warning: TRSAI metadata currently exposes a single hotspot class. Results are one-class hotspot scoring only.")
     train_frame = frame[frame["split"] == "train"].copy()
     val_frame = frame[frame["split"] == "val"].copy()
     train_frame = limit_frame(train_frame, cfg.get("max_train_samples"), seed=cfg.get("random_seed", 42))

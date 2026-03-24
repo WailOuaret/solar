@@ -1,14 +1,15 @@
 # PV Monitoring Project Checklist
 
-Last updated: 2026-03-23
+Last updated: 2026-03-24
 Workspace: `c:\Users\wailo\Desktop\solar`
 
 ## Current Status
 
-- The proposal/planning work is mostly defined.
-- The repository scaffold has been created.
-- Core code for metadata, datasets, models, training, inference, scripts, notebooks, and tests is now present.
-- Real dataset download, model training, and experiment results are still pending.
+- The repository scaffold is complete.
+- The three raw datasets are frozen under `data/raw/`.
+- Metadata, leakage-safe splits, and audit artifacts have been generated on the real data.
+- Reduced-run baselines have been trained for DeepSolarEye, Villegas, and TRSAI.
+- Final full-dataset experiments, demo packaging, and aligned fusion evaluation are still pending.
 
 ## Done Already (Planning / Scope)
 
@@ -51,10 +52,10 @@ Workspace: `c:\Users\wailo\Desktop\solar`
 
 ### Phase 3: Dataset Acquisition
 
-- [ ] Download DeepSolarEye
-- [ ] Download Villegas dataset
-- [ ] Download TRSAI dataset
-- [ ] Freeze raw datasets under `data/raw/`
+- [x] Download DeepSolarEye
+- [x] Download Villegas dataset
+- [x] Download TRSAI dataset
+- [x] Freeze raw datasets under `data/raw/`
 - [x] Record dataset licenses
 - [x] Record dataset versions
 - [x] Record dataset checksums
@@ -84,13 +85,13 @@ Workspace: `c:\Users\wailo\Desktop\solar`
 ### Phase 6: EDA and Audit
 
 - [x] Create `notebooks/01_data_audit.ipynb`
-- [ ] Audit sample counts
-- [ ] Audit image sizes
-- [ ] Audit missing metadata
-- [ ] Audit class imbalance
-- [ ] Audit duplicates / near-duplicates
-- [ ] Audit temporal leakage risk
-- [ ] Save audit figures
+- [x] Audit sample counts
+- [x] Audit image sizes
+- [x] Audit missing metadata
+- [x] Audit class imbalance
+- [x] Audit duplicates / near-duplicates
+- [x] Audit temporal leakage risk
+- [x] Save audit figures
 
 ### Phase 7: Models
 
@@ -112,20 +113,20 @@ Workspace: `c:\Users\wailo\Desktop\solar`
 - [x] Create DeepSolarEye training script
 - [x] Create Villegas training script
 - [x] Create TRSAI training script
-- [ ] Train DeepSolarEye RGB baseline
-- [ ] Evaluate power-loss regression
-- [ ] Add severity classification
-- [ ] Train Villegas image-only regression
-- [ ] Train Villegas image + weather regression
-- [ ] Compare image-only vs image + weather
-- [ ] Train TRSAI thermal baseline
-- [ ] Evaluate hotspot branch
+- [x] Train DeepSolarEye RGB baseline
+- [x] Evaluate power-loss regression
+- [x] Add severity classification
+- [x] Train Villegas image-only regression
+- [x] Train Villegas image + weather regression
+- [x] Compare image-only vs image + weather
+- [x] Train TRSAI thermal baseline
+- [x] Evaluate hotspot branch
 
 ### Phase 10: Transfer and Fusion
 
-- [ ] Pretrain RGB branch on DeepSolarEye
-- [ ] Fine-tune on Villegas
-- [ ] Compare transfer vs scratch
+- [x] Pretrain RGB branch on DeepSolarEye
+- [x] Fine-tune on Villegas
+- [x] Compare transfer vs scratch
 - [x] Build severity mapping
 - [x] Build decision rules
 - [x] Build fusion pipeline
@@ -142,28 +143,30 @@ Workspace: `c:\Users\wailo\Desktop\solar`
 ### Phase 12: Analysis and Finalization
 
 - [x] Create error-analysis notebook
-- [ ] Measure latency / inference time
-- [ ] Document limitations
+- [x] Measure latency / inference time
+- [x] Document limitations
 - [x] Write final report
 - [ ] Prepare demo-ready outputs
 - [x] Add tests
 
 ## Honest Progress Summary
 
-- Planning: done at a high level
-- Code implementation: scaffold and first full pass completed
-- Data acquisition: download workflow prepared, raw data still missing
-- Training: not started in this repo
-- Evaluation: not started in this repo
-- Final system: architecture and inference logic implemented, but no trained checkpoints yet
+- Planning: done
+- Code implementation: scaffold and branch scripts completed
+- Data acquisition: done
+- Metadata and splits: done on real data
+- Audit: done on real data
+- Training: reduced-run baselines completed
+- Evaluation: reduced-run metrics generated for all three branches
+- Final system: branch checkpoints exist; aligned fusion benchmarking still pending
 
 ## Recommended Next 5 Actions
 
-1. Create the repo structure and the base files: `README.md`, `requirements.txt`, `.gitignore`, `configs/`.
-2. Download the three datasets and freeze them in `data/raw/`.
-3. Implement the unified schema and metadata builder.
-4. Create leakage-safe splits before training anything.
-5. Train the first DeepSolarEye baseline only after the audit notebook is complete.
+1. Decide whether to rerun the strongest experiments on the full datasets instead of the reduced sample caps.
+2. Produce demo-ready prediction examples and a small fusion showcase.
+3. Refresh `outputs/reports/final_report.md` after any new runs.
+4. If TRSAI labels can be enriched with negatives, rerun the thermal branch as a real binary hotspot task.
+5. Add an aligned fusion evaluation set or a small manual demo bundle that shares common inspection cases across branches.
 
 ## Update Rule
 
